@@ -1,0 +1,42 @@
+import pypyodbc as odbc
+from sqlalchemy import create_engine
+import datetime
+from time import time
+import pandas as pd
+
+# Define the connection parameters
+DRIVER_NAME = 'SQL SERVER' 
+SERVER_NAME = 'TM'
+DATABASE_NAME = 'AdventureWorks2016'
+
+
+# Step 1: Create the connection string
+connection_string = f"""
+                    DRIVER={{{DRIVER_NAME}}};
+                    SERVER={SERVER_NAME};
+                    DATABASE={DATABASE_NAME};
+                    Trust_Connection=YES;
+"""
+
+# Establish the connection
+conn = odbc.connect(connection_string)
+
+# Step 2: Fetch Data into a DataFrame
+query = "SELECT * FROM [HumanResources].[Employee]"
+
+# Query execution start time
+current_timestamp = datetime.datetime.now()
+
+print("Data load to sql server starting",current_timestamp)
+
+df = pd.read_sql(query, conn)
+
+# Query executed end time
+current_timestamp = datetime.datetime.now()
+
+print("Data load to sql server end: ",current_timestamp)
+
+
+# Close the cursor and connection
+cursor.close()
+conn.close()
